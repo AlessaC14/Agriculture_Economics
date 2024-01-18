@@ -51,13 +51,13 @@ percent_agr_credit <- credit_to_agriculture$"Agr_Credit" / total_credit$"Credit"
 df <- data.frame(credit_to_agriculture, "Credit" = total_credit$"Credit", "Perc_Agr_Cred" = percent_agr_credit, "GDP" = GDP$"GDP", "Share" = GDP_share$"Share")
 
 # plot Agricultural Share of GDP versus Percent Credit to Agriculture
-regression <- glm(df$"Share" ~ df$"Perc_Agr_Cred")
+regression <- lm(df$"Share" ~ df$"Perc_Agr_Cred")
 coefficients <- coef(regression)
 xsample <- c(0, 30)
 ysample <- coefficients[1]+coefficients[2]*xsample
 sample_df <- data.frame(xsample, ysample)
 
-png("ASGDPvPCA.png", width = 800, height = 600, res = 72)
+png("ASGDPvPCA.png", width = 400, height = 300, res = 72)
 ggplot(data = df) + 
   geom_point(mapping = aes(x=Perc_Agr_Cred, y=Share)) + 
   ylim(0, 100) + 
@@ -70,13 +70,13 @@ dev.off()
 no_outliers_df <- df[order(df$"Perc_Agr_Cred", decreasing=TRUE), ]
 no_outliers_df <- no_outliers_df[no_outliers_df$Area != "Tajikistan" & no_outliers_df$Area != "Zimbabwe" & no_outliers_df$"Area" != "Sudan", ]
 
-regression <- glm(no_outliers_df$"Share" ~ no_outliers_df$"Perc_Agr_Cred")
+regression <- lm(no_outliers_df$"Share" ~ no_outliers_df$"Perc_Agr_Cred")
 coefficients <- coef(regression)
 xsample <- c(0, 20)
 ysample <- coefficients[1]+coefficients[2]*xsample
 sample_df <- data.frame(xsample, ysample)
 
-png("ASGDPvPCA_no_outliers.png", width = 800, height = 600, res = 72)
+png("ASGDPvPCA_no_outliers.png", width = 400, height = 300, res = 72)
 ggplot(data = no_outliers_df) + 
   geom_point(mapping = aes(x=Perc_Agr_Cred, y=Share)) + 
   ylim(0, 100) + 
@@ -86,13 +86,13 @@ ggplot(data = no_outliers_df) +
 dev.off()
 
 # plot Agricultural Share of GDP versus GDP
-regression <- glm(df$"Share" ~ df$"GDP")
+regression <- lm(df$"Share" ~ df$"GDP")
 coefficients <- coef(regression)
 xsample <- c(0, 2.5e13)
 ysample <- coefficients[1]+coefficients[2]*xsample
 sample_df <- data.frame(xsample, ysample)
 
-png("ASGDPvGDP.png", width = 800, height = 600, res = 72)
+png("ASGDPvGDP.png", width = 400, height = 300, res = 72)
 ggplot(data = df) + 
   geom_point(mapping = aes(x=GDP, y=Share)) + 
   xlim(0, 2.5e13) + 
@@ -106,13 +106,13 @@ dev.off()
 no_outliers_df <- df[order(df$"GDP", decreasing=TRUE), ]
 no_outliers_df <- no_outliers_df[no_outliers_df$Area != "United States of America", ]
 
-regression <- glm(no_outliers_df$"Share" ~ no_outliers_df$"GDP")
+regression <- lm(no_outliers_df$"Share" ~ no_outliers_df$"GDP")
 coefficients <- coef(regression)
 xsample <- c(0, 6e12)
 ysample <- coefficients[1]+coefficients[2]*xsample
 sample_df <- data.frame(xsample, ysample)
 
-png("ASGDPvGDP_no_outliers.png", width = 800, height = 600, res = 72)
+png("ASGDPvGDP_no_outliers.png", width = 400, height = 300, res = 72)
 ggplot(data = no_outliers_df) + 
   geom_point(mapping = aes(x=GDP, y=Share)) + 
   labs(title="Agricultural Share of GDP versus GPD", x="GDP", y="Agricultural Share of GDP") + 
@@ -124,13 +124,13 @@ dev.off()
 no_outliers_df <- df[order(df$"GDP", decreasing=TRUE), ]
 no_outliers_df <- no_outliers_df[no_outliers_df$GDP < 1e12, ]
 
-regression <- glm(no_outliers_df$"Share" ~ no_outliers_df$"GDP")
+regression <- lm(no_outliers_df$"Share" ~ no_outliers_df$"GDP")
 coefficients <- coef(regression)
 xsample <- c(0, 1e12)
 ysample <- coefficients[1]+coefficients[2]*xsample
 sample_df <- data.frame(xsample, ysample)
 
-png("ASGDPvGDP_lt1e12.png", width = 800, height = 600, res = 72)
+png("ASGDPvGDP_lt1e12.png", width = 400, height = 300, res = 72)
 ggplot(data = no_outliers_df) + 
   geom_point(mapping = aes(x=GDP, y=Share)) + 
   xlim(0, 1e12) + 
@@ -141,13 +141,13 @@ ggplot(data = no_outliers_df) +
 dev.off()
 
 #plot Percent Credit to Agriculture versus Total Credit
-regression <- glm(df$"Perc_Agr_Cred" ~ df$"Credit")
+regression <- lm(df$"Perc_Agr_Cred" ~ df$"Credit")
 coefficients <- coef(regression)
 xsample <- c(0, 1.2e13)
 ysample <- coefficients[1]+coefficients[2]*xsample
 sample_df <- data.frame(xsample, ysample)
 
-png("PCAvTC.png", width = 800, height = 600, res = 72)
+png("PCAvTC.png", width = 400, height = 300, res = 72)
 ggplot(data = df) + 
   geom_point(mapping = aes(x=Credit, y=Perc_Agr_Cred)) + 
   labs(title="Percent Credit to Agriculture versus Total Credit", x="Total Credit (USD)", y="Percent Credit to Agriculture (USD)") + 
@@ -159,13 +159,13 @@ dev.off()
 no_outliers_df <- df[order(df$"Credit", decreasing=TRUE), ]
 no_outliers_df <- no_outliers_df[no_outliers_df$"Area" != "United States of America", ]
 
-regression <- glm(no_outliers_df$"Perc_Agr_Cred" ~ no_outliers_df$"Credit")
+regression <- lm(no_outliers_df$"Perc_Agr_Cred" ~ no_outliers_df$"Credit")
 coefficients <- coef(regression)
 xsample <- c(0, 2e12)
 ysample <- coefficients[1]+coefficients[2]*xsample
 sample_df <- data.frame(xsample, ysample)
 
-png("PCAvTC_no_outliers.png", width = 800, height = 600, res = 72)
+png("PCAvTC_no_outliers.png", width = 400, height = 300, res = 72)
 ggplot(data = no_outliers_df) + 
   geom_point(mapping = aes(x=Credit, y=Perc_Agr_Cred)) + 
   labs(title="Percent Credit to Agriculture versus Total Credit", x="Total Credit (USD)", y="Percent Credit to Agriculture (USD)") + 
@@ -177,13 +177,13 @@ dev.off()
 no_outliers_df <- df[order(df$"Credit", decreasing=TRUE), ]
 no_outliers_df <- no_outliers_df[no_outliers_df$"Credit" < 2e10, ]
 
-regression <- glm(no_outliers_df$"Perc_Agr_Cred" ~ no_outliers_df$"Credit")
+regression <- lm(no_outliers_df$"Perc_Agr_Cred" ~ no_outliers_df$"Credit")
 coefficients <- coef(regression)
 xsample <- c(0, 2e10)
 ysample <- coefficients[1]+coefficients[2]*xsample
 sample_df <- data.frame(xsample, ysample)
 
-png("PCAvTC_lt2e10.png", width = 800, height = 600, res = 72)
+png("PCAvTC_lt2e10.png", width = 400, height = 300, res = 72)
 ggplot(data = no_outliers_df) + 
   geom_point(mapping = aes(x=Credit, y=Perc_Agr_Cred)) + 
   labs(title="Percent Credit to Agriculture versus Total Credit", x="Total Credit (USD)", y="Percent Credit to Agriculture (USD)") + 
@@ -230,11 +230,11 @@ US_df <- data.frame(US_credit_to_agriculture, "Credit" = US_total_credit$"Credit
 long_df <- US_df[ , c(1, 2, 3, 5)]
 long_df <- long_df %>% pivot_longer(cols = c(Agr_Credit, Credit, GDP), names_to = "Category", values_to = "Value")
 
-png("USDvT.png", width = 800, height = 600, res = 72)
+png("US_GvT.png", width = 400, height = 300, res = 72)
 ggplot(long_df, aes(x = Year, y = Value, color = Category)) +
   geom_point() +
   theme_classic() +
-  labs(title = "Total Credit, Credit to Agriculture, and GDP versus Time in the United States", x = "Year", y = "USD", color = "Legend") + 
+  labs(title = "Total Credit, Credit to Agriculture, and GDP", x = "Year", y = "USD", color = "Legend") + 
   scale_color_manual(values = c("Agr_Credit" = "red", "Credit" = "blue", "GDP" = "black"),
                      labels = c("Credit to Agriculture", "Total Credit", "GDP"))
 dev.off()
@@ -243,11 +243,13 @@ dev.off()
 long_df <- US_df[ , c(1, 4, 6)]
 long_df <- long_df %>% pivot_longer(cols = c(Perc_Agr_Cred, Share), names_to = "Category", values_to = "Value")
 
-png("USDvT.png", width = 800, height = 600, res = 72)
+png("US_AvT.png", width = 400, height = 300, res = 72)
 ggplot(long_df, aes(x = Year, y = Value, color = Category)) +
   geom_point() +
   theme_classic() +
-  labs(title = "Percent Credit to Agriculture and Agricultural Share of GDP versus Time", x = "Year", y = "Percent", color = "Legend") + 
+  labs(title = "Percent Credit to Agriculture and Agricultural Share of GDP", x = "Year", y = "Percent", color = "Legend") + 
   scale_color_manual(values = c("Perc_Agr_Cred" = "red", "Share" = "black"),
                      labels = c("Percent Credit to Agriculture", "Agricultural Share of GDP"))
 dev.off()
+
+regression <- lm(US_df$Perc_Agr_Cred ~ US_df$Share)
