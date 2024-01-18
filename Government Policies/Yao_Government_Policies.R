@@ -226,6 +226,8 @@ US_percent_agr_credit <- US_credit_to_agriculture$"Agr_Credit" / US_total_credit
 # create data frame for analysis
 US_df <- data.frame(US_credit_to_agriculture, "Credit" = US_total_credit$"Credit", "Perc_Agr_Cred" = US_percent_agr_credit, "GDP" = US_GDP$"GDP", "Share" = US_GDP_share$"Share")
 
+write.csv(US_df, "US_df.csv")
+
 # plot Total Credit, Credit to Agriculture, and GDP versus Time in the United States
 long_df <- US_df[ , c(1, 2, 3, 5)]
 long_df <- long_df %>% pivot_longer(cols = c(Agr_Credit, Credit, GDP), names_to = "Category", values_to = "Value")
