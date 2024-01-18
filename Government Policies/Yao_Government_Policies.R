@@ -191,12 +191,15 @@ ggplot(data = no_outliers_df) +
   theme_classic()
 dev.off()
 
-# Plot Credit to Agriculture versus Time in the United States of America
-US_total_credit <- read.csv("total_credit.csv")
-US_credit_to_agriculture <- read.csv("credit_to_agriculture.csv")
+# Analyze United States over Time
+
+# read csv files
+US_total_credit <- read.csv("US_total_credit.csv")
+US_credit_to_agriculture <- read.csv("US_credit_to_agriculture.csv")
 US_GDP_share <- read.csv("API_NV.AGR.TOTL.ZS_DS2_en_csv_v2_6299253.csv")
 US_GDP <- read.csv("API_NY.GDP.MKTP.CD_DS2_en_csv_v2_6298258.csv")
 
+# clean US GDP data
 US_GDP_share <- US_GDP_share[US_GDP_share$"Country.Name" == "United States of America", ]
 US_GDP_share <- US_GDP_share[ , grepl("^X", names(US_GDP_share))]
 US_GDP_share <- US_GDP_share[ , 38:62]
@@ -207,4 +210,44 @@ US_GDP <- US_GDP[US_GDP$"Country.Name" == "United States of America", ]
 US_GDP <- US_GDP[ , grepl("^X", names(US_GDP))]
 US_GDP <- US_GDP[ , 38:62]
 US_GDP <- data.frame("Year" = c(1997:2021), "GDP" = t(US_GDP[1, ]))
-US_GDP <- data.frame("Year" = c(1997:2021), "GDP" = US_GDP$"GDP")
+US_GDP <- data.frame("Year" = c(1997:2021), "GDP" = US_GDP$"X252")
+
+# clean US credit data
+US_total_credit <- US_total_credit[7:31, ]
+US_credit_to_agriculture <- US_credit_to_agriculture[7:31, ]
+
+US_total_credit$"Value" <- US_total_credit$"Value" * 1e6
+US_credit_to_agriculture$"Value" <- US_credit_to_agriculture$"Value" * 1e6
+
+US_total_credit <- data.frame("Year" = US_total_credit$"Year", "Credit" = US_total_credit$"Value")
+US_credit_to_agriculture <- data.frame("Year" = US_credit_to_agriculture$"Year", "Agr_Credit" = US_credit_to_agriculture$"Value")
+US_percent_agr_credit <- US_credit_to_agriculture$"Agr_Credit" / US_total_credit$"Credit" * 100
+
+# create data frame for analysis
+US_df <- data.frame(US_credit_to_agriculture, "Credit" = US_total_credit$"Credit", "Perc_Agr_Cred" = US_percent_agr_credit, "GDP" = US_GDP$"GDP", "Share" = US_GDP_share$"Share")
+
+# plot Total Credit, Credit to Agriculture, and GDP versus Time in the United States
+long_df <- US_df[ , c(1, 2, 3, 5)]
+long_df <- long_df %>% pivot_longer(cols = c(Agr_Credit, Credit, GDP), names_to = "Category", values_to = "Value")
+
+png("USDvT.png", width = 800, height = 600, res = 72)
+ggplot(long_df, aes(x = Year, y = Value, color = Category)) +
+  geom_point() +
+  theme_classic() +
+  labs(title = "Total Credit, Credit to Agriculture, and GDP versus Time in the United States", x = "Year", y = "USD", color = "Legend") + 
+  scale_color_manual(values = c("Agr_Credit" = "red", "Credit" = "blue", "GDP" = "black"),
+                     labels = c("Credit to Agriculture", "Total Credit", "GDP"))
+dev.off()
+
+# plot Percent Credit to Agriculture and Agricultural Share of GDP versus Time
+long_df <- US_df[ , c(1, 4, 6)]
+long_df <- long_df %>% pivot_longer(cols = c(Perc_Agr_Cred, Share), names_to = "Category", values_to = "Value")
+
+png("USDvT.png", width = 800, height = 600, res = 72)
+ggplot(long_df, aes(x = Year, y = Value, color = Category)) +
+  geom_point() +
+  theme_classic() +
+  labs(title = "Percent Credit to Agriculture and Agricultural Share of GDP versus Time", x = "Year", y = "Percent", color = "Legend") + 
+  scale_color_manual(values = c("Perc_Agr_Cred" = "red", "Share" = "black"),
+                     labels = c("Percent Credit to Agriculture", "Agricultural Share of GDP"))
+dev.off()
