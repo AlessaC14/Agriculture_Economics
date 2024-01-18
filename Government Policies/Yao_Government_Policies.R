@@ -53,7 +53,7 @@ df <- data.frame(credit_to_agriculture, "Credit" = total_credit$"Credit", "Perc_
 # plot Agricultural Share of GDP versus Percent Credit to Agriculture
 regression <- glm(df$"Share" ~ df$"Perc_Agr_Cred")
 coefficients <- coef(regression)
-xsample <- c(0, 50)
+xsample <- c(0, 30)
 ysample <- coefficients[1]+coefficients[2]*xsample
 sample_df <- data.frame(xsample, ysample)
 
@@ -66,13 +66,13 @@ ggplot(data = df) +
   theme_classic()
 dev.off()
 
-# remove the two outliers (ie., Tajikistan and Zimbabwe)
+# remove the three outliers (ie., Tajikistan, Zimbabwe, and Sudan)
 no_outliers_df <- df[order(df$"Perc_Agr_Cred", decreasing=TRUE), ]
-no_outliers_df <- no_outliers_df[no_outliers_df$Area != "Tajikistan" & no_outliers_df$Area != "Zimbabwe", ]
+no_outliers_df <- no_outliers_df[no_outliers_df$Area != "Tajikistan" & no_outliers_df$Area != "Zimbabwe" & no_outliers_df$"Area" != "Sudan", ]
 
 regression <- glm(no_outliers_df$"Share" ~ no_outliers_df$"Perc_Agr_Cred")
 coefficients <- coef(regression)
-xsample <- c(0, 30)
+xsample <- c(0, 20)
 ysample <- coefficients[1]+coefficients[2]*xsample
 sample_df <- data.frame(xsample, ysample)
 
