@@ -25,7 +25,7 @@ credit_to_agriculture$"Value" <- credit_to_agriculture$"Value" * 1e6
 
 # sort alphabetically
 GDP <- GDP[order(GDP$"Area"), ]
-GDP_share <- GDP_share[order(GDP$"Area"), ]
+GDP_share <- GDP_share[order(GDP_share$"Area"), ]
 total_credit <- total_credit[order(total_credit$"Area"), ]
 credit_to_agriculture <- credit_to_agriculture[order(credit_to_agriculture$"Area"), ]
 
@@ -66,56 +66,17 @@ ggplot(data = df) +
   theme_classic()
 dev.off()
 
-# remove the three outliers (ie., Tajikistan, Zimbabwe, and Sudan)
-no_outliers_df <- df[order(df$"Perc_Agr_Cred", decreasing=TRUE), ]
-no_outliers_df <- no_outliers_df[no_outliers_df$Area != "Tajikistan" & no_outliers_df$Area != "Zimbabwe" & no_outliers_df$"Area" != "Sudan", ]
-
-regression <- lm(no_outliers_df$"Share" ~ no_outliers_df$"Perc_Agr_Cred")
-coefficients <- coef(regression)
-xsample <- c(0, 20)
-ysample <- coefficients[1]+coefficients[2]*xsample
-sample_df <- data.frame(xsample, ysample)
-
-png("ASGDPvPCA_no_outliers.png", width = 400, height = 300, res = 72)
-ggplot(data = no_outliers_df) + 
-  geom_point(mapping = aes(x=Perc_Agr_Cred, y=Share)) + 
-  ylim(0, 100) + 
-  labs(title="Agricultural Share of GDP versus Percent Credit to Agriculture", x="Percent Credit to Agriculture", y="Agricultural Share of GDP") + 
-  geom_line(mapping = aes(x=xsample, y=ysample), data=sample_df, color="red") + 
-  theme_classic()
-dev.off()
-
 # plot Agricultural Share of GDP versus GDP
 regression <- lm(df$"Share" ~ df$"GDP")
 coefficients <- coef(regression)
-xsample <- c(0, 2.5e13)
+xsample <- c(0, 2e13)
 ysample <- coefficients[1]+coefficients[2]*xsample
 sample_df <- data.frame(xsample, ysample)
 
 png("ASGDPvGDP.png", width = 400, height = 300, res = 72)
 ggplot(data = df) + 
   geom_point(mapping = aes(x=GDP, y=Share)) + 
-  xlim(0, 2.5e13) + 
-  ylim(0, 100) + 
-  labs(title="Agricultural Share of GDP verus GDP", x="GDP (USD)", y="Agricultural Share of GDP") + 
-  geom_line(mapping = aes(x=xsample, y=ysample), data=sample_df, color="red") + 
-  theme_classic()
-dev.off()
-
-# remove outliers (ie., United States of America)
-no_outliers_df <- df[order(df$"GDP", decreasing=TRUE), ]
-no_outliers_df <- no_outliers_df[no_outliers_df$Area != "United States of America", ]
-
-regression <- lm(no_outliers_df$"Share" ~ no_outliers_df$"GDP")
-coefficients <- coef(regression)
-xsample <- c(0, 6e12)
-ysample <- coefficients[1]+coefficients[2]*xsample
-sample_df <- data.frame(xsample, ysample)
-
-png("ASGDPvGDP_no_outliers.png", width = 400, height = 300, res = 72)
-ggplot(data = no_outliers_df) + 
-  geom_point(mapping = aes(x=GDP, y=Share)) + 
-  labs(title="Agricultural Share of GDP versus GPD", x="GDP", y="Agricultural Share of GDP") + 
+  labs(title="Agricultural Share of GDP versus GDP", x="GDP (USD)", y="Agricultural Share of GDP") + 
   geom_line(mapping = aes(x=xsample, y=ysample), data=sample_df, color="red") + 
   theme_classic()
 dev.off()
@@ -126,7 +87,7 @@ no_outliers_df <- no_outliers_df[no_outliers_df$GDP < 1e12, ]
 
 regression <- lm(no_outliers_df$"Share" ~ no_outliers_df$"GDP")
 coefficients <- coef(regression)
-xsample <- c(0, 1e12)
+xsample <- c(0, 8.2e11)
 ysample <- coefficients[1]+coefficients[2]*xsample
 sample_df <- data.frame(xsample, ysample)
 
@@ -135,7 +96,7 @@ ggplot(data = no_outliers_df) +
   geom_point(mapping = aes(x=GDP, y=Share)) + 
   xlim(0, 1e12) + 
   ylim(0, 100) + 
-  labs(title="Agricultural Share of GDP versus GPD", x="GDP", y="Agricultural Share of GDP") + 
+  labs(title="Agricultural Share of GDP versus GDP", x="GDP", y="Agricultural Share of GDP") + 
   geom_line(mapping = aes(x=xsample, y=ysample), data=sample_df, color="red") + 
   theme_classic()
 dev.off()
