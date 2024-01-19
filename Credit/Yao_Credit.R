@@ -60,7 +60,6 @@ sample_df <- data.frame(xsample, ysample)
 png("ASGDPvPCA.png", width = 400, height = 300, res = 72)
 ggplot(data = df) + 
   geom_point(mapping = aes(x=Perc_Agr_Cred, y=Share)) + 
-  ylim(0, 100) + 
   labs(title="Agricultural Share of GDP versus Percent Credit to Agriculture", x="Percent Credit to Agriculture", y="Agricultural Share of GDP") + 
   geom_line(mapping = aes(x=xsample, y=ysample), data=sample_df, color="red") + 
   theme_classic()
