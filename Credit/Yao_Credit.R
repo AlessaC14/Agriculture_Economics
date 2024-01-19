@@ -1,4 +1,4 @@
-# Effects of Government Policies for Agriculture
+# Effects of Credit for Agriculture
 
 library(tidyverse)
 library(ggplot2)
